@@ -1,3 +1,10 @@
+jmx4perl (1.07-1~gekkio1~precise1) precise; urgency=low
+
+  * Backport to Precise.
+  * Relax debhelper version requirement
+
+ -- Joonas Javanainen <joonas.javanainen@gmail.com>  Mon, 24 Mar 2014 15:28:07 +0200
+
 jmx4perl (1.07-1~gekkio1) trusty; urgency=low
 
   * Initial Release.
