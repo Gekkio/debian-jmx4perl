@@ -1,0 +1,2 @@
+version=3
+https://metacpan.org/release/jmx4perl   .*/jmx4perl-v?(\d[\d.-]*)\.(?:tar(?:\.gz|\.bz2)?|tgz|zip)$

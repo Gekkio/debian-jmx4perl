@@ -1,0 +1,773 @@
+Description: Upstream tarball vs git tag
+ Upstream tarball doesn't match with the git tag
+ .
+ libjmx4perl-perl (1.07-1~gekkio1) trusty; urgency=low
+ .
+   * Initial Release.
+Author: Joonas Javanainen <joonas.javanainen@gmail.com>
+
+--- libjmx4perl-perl-1.07.orig/META.yml
++++ libjmx4perl-perl-1.07/META.yml
+@@ -17,7 +17,7 @@ name: jmx4perl
+ provides:
+   JMX::Jmx4Perl:
+     file: lib/JMX/Jmx4Perl.pm
+-    version: 1.07
++    version: 1.07_1
+   JMX::Jmx4Perl::Agent:
+     file: lib/JMX/Jmx4Perl/Agent.pm
+     version: 0
+@@ -192,4 +192,4 @@ requires:
+   base: 0
+ resources:
+   license: http://opensource.org/licenses/gpl-license.php
+-version: 1.07
++version: 1.07_1
+--- /dev/null
++++ libjmx4perl-perl-1.07/TODO
+@@ -0,0 +1,64 @@
++1.06
++====
++
++- ${0} aufloesen (??? in den tests funktioniert .... hmmm)
++- jolokia: Auch ein sun-web.xml anlegen (ggfs.)
++- Agents nach OMD
++- 'refresh' in j4psh
++
++- Relative and delta checks combined (see mail from Reinhard)
++- Optional hide performance data (RT#75062)
++- RT#69167 - Alias resolution
++- RT#70892 - ePN
++
++- --unknown-is-critical in documentation of check_jmx4perl
++- wbelogic checks
++- Checks, if MBean is missing or existing
++- Matching auf value part or existance of keys in MBean names
++- Parameter durchreichen bei Pool-Checks
++- check_jmx4perl with pattern and path won't work on jolokia's side: java.lang:type=*/HeapMemoryUsage/used
++
++04 Deployment instructions for various application servers
++06 WS-Management integration ?
++07 Path handling for operation return values
++14 JSON Schema for protocol
++16 SSL Support for jvm-agent-6
++17 JVM agent with Jetty for Non Sun-JDK 6 environments
++18 More unit tests
++20 Pattern switching of history
++22 Bug: Overloaded method with string array arguments 
++   gets parsed badly: 
++   No operation installBundles([Ljava.lang.String found on MBean osgi.core:type=framework,version=1.5
++51 Versionscheck in Requests. Offer upgrade path and recommendations.
++52 Local storage for history values (?)
++53 Fail fast for --delta when Config-MBean is not available
++
++j4psh:
++
++80 last_error handling in ServerHandler
++81 Completion on MBeans with spaces
++82 Formatting for overlength MBean lines
++   (complete MBean->_lign_aligned)
++83 Wildcard for 'cd' in MBean/Domain listing
++84 'cat': Proper Error-Handling
++85 Implement 'find/search' (attribute/operation names, content of attributes)
++86 Implement 'version'
++87 History Handling
++88 Plugin architecture
++89 Alias support
++90 MBean Description for 'list' command
++91 Bug: Glassfish, cat in servlet:
++[localhost:8080 com.sun.appserv:J2EEApplication=null, ...] : cat *
++Error: java.lang.ClassCastException: org.json.simple.JSONArray cannot be cast to java.lang.String at /opt/local/lib/perl5/site_perl/5.8.9/JMX/Jmx4Perl/J4psh/Command/MBean.pm line 155.
++92 overloaded exec()
++93 cd ../type=Memory (cd mit relativen Pfaden ..)
++94 refresh()
++93 Overloaded with void params
++
++java-client:
++
++200 Respect redirect answers (jetty without trailing slash)
++
++
++
++Math::Pari --> dynamic download during build
+\ No newline at end of file
+--- libjmx4perl-perl-1.07.orig/MANIFEST
++++ libjmx4perl-perl-1.07/MANIFEST
+@@ -142,4 +142,3 @@ t/j4p_test.cfg
+ t/lib/It.pm
+ t/lib/ProductTest/Test1Handler.pm
+ t/lib/ProductTest/Test2Handler.pm
+-SIGNATURE    Added here by Module::Build
+--- /dev/null
++++ libjmx4perl-perl-1.07/MANIFEST.SKIP
+@@ -0,0 +1,80 @@
++# Avoid version control files.
++\bRCS\b
++\bCVS\b
++,v$
++\B\.svn\b
++\B\.cvsignore$
++\B\.gitignore$
++
++# Avoid Makemaker generated and utility files.
++\bMakefile$
++\bblib
++\bMakeMaker-\d
++\bpm_to_blib$
++\bblibdirs$
++^MANIFEST\.SKIP$
++
++# Avoid VMS specific Makmaker generated files
++\bDescrip.MMS$
++\bDESCRIP.MMS$
++\bdescrip.mms$
++
++# Avoid Module::Build generated and utility files.
++\bBuild$
++\bBuild.bat$
++\b_build
++\bBuild.COM$
++\bBUILD.COM$
++\bbuild.com$
++
++# Avoid Devel::Cover generated files
++\bcover_db
++
++# Avoid temp and backup files.
++~$
++\.tmp$
++\.old$
++\.bak$
++\#$
++\.#
++\.rej$
++\.ipr$
++\.iws$
++\.iml$
++
++# Avoid OS-specific files/dirs
++#   Mac OSX metadata
++\B\.DS_Store
++#   Mac OSX SMB mount metadata files
++\B\._
++# Avoid archives of this distribution
++\bjmx4perl-[\d\.\_]+
++
++# Java build directory
++\bagent/target\b
++
++^test.pl$
++scripts/handlerTest.pl
++^TODO$
++^tmp
++^.git/.*
++.*/target/.*
++temp/.*
++kurs.txt
++x.pl
++agent/j4p-it.war
++agent/j4p-access.xml$
++jboss_attr.txt
++site/.*
++x/.*
++it/test_log.txt
++jmx_remote.txt
++release.txt
++agent/modules/j4p-osgi/runner/*
++osgi.txt
++MYMETA.yml
++blog_ideas.txt
++agent/.sonar-ide.properties
++docs/
++agent/classes
++^MYMETA\.json$
+--- libjmx4perl-perl-1.07.orig/META.json
++++ libjmx4perl-perl-1.07/META.json
+@@ -3,7 +3,7 @@
+    "author" : [
+       "Roland Huss (roland@cpan.org)"
+    ],
+-   "dynamic_config" : 1,
++   "dynamic_config" : 0,
+    "generated_by" : "Module::Build version 0.3901, CPAN::Meta::Converter version 2.120630",
+    "license" : [
+       "open_source"
+@@ -60,7 +60,7 @@
+    "provides" : {
+       "JMX::Jmx4Perl" : {
+          "file" : "lib/JMX/Jmx4Perl.pm",
+-         "version" : "1.07"
++         "version" : "1.07_1"
+       },
+       "JMX::Jmx4Perl::Agent" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent.pm",
+@@ -68,198 +68,198 @@
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::ArtifactHandler" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/ArtifactHandler.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::DownloadAgent" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/DownloadAgent.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Logger" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Logger.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Logger::None" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Logger.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Meta" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Meta.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Verifier" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Verifier.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Verifier::ChecksumVerifier" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Verifier/ChecksumVerifier.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Verifier::GnuPGVerifier" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Verifier/GnuPGVerifier.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Verifier::MD5Verifier" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Verifier/MD5Verifier.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Verifier::OpenPGPVerifier" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Verifier/OpenPGPVerifier.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Verifier::PGPKey" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Verifier/PGPKey.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::Verifier::SHA1Verifier" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/Verifier/SHA1Verifier.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::Jolokia::WebXmlHandler" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/Jolokia/WebXmlHandler.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Agent::UserAgent" : {
+          "file" : "lib/JMX/Jmx4Perl/Agent/UserAgent.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Alias" : {
+          "file" : "lib/JMX/Jmx4Perl/Alias.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Alias::Object" : {
+          "file" : "lib/JMX/Jmx4Perl/Alias/Object.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Config" : {
+          "file" : "lib/JMX/Jmx4Perl/Config.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::J4psh" : {
+          "file" : "lib/JMX/Jmx4Perl/J4psh.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::J4psh::Command" : {
+          "file" : "lib/JMX/Jmx4Perl/J4psh/Command.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::J4psh::Command::Global" : {
+          "file" : "lib/JMX/Jmx4Perl/J4psh/Command/Global.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::J4psh::Command::MBean" : {
+          "file" : "lib/JMX/Jmx4Perl/J4psh/Command/MBean.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::J4psh::Command::Server" : {
+          "file" : "lib/JMX/Jmx4Perl/J4psh/Command/Server.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::J4psh::CommandHandler" : {
+          "file" : "lib/JMX/Jmx4Perl/J4psh/CommandHandler.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::J4psh::CompletionHandler" : {
+          "file" : "lib/JMX/Jmx4Perl/J4psh/CompletionHandler.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::J4psh::ServerHandler" : {
+          "file" : "lib/JMX/Jmx4Perl/J4psh/ServerHandler.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::J4psh::Shell" : {
+          "file" : "lib/JMX/Jmx4Perl/J4psh/Shell.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Nagios::CactiJmx4Perl" : {
+          "file" : "lib/JMX/Jmx4Perl/Nagios/CactiJmx4Perl.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Nagios::CheckJmx4Perl" : {
+          "file" : "lib/JMX/Jmx4Perl/Nagios/CheckJmx4Perl.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Nagios::SingleCheck" : {
+          "file" : "lib/JMX/Jmx4Perl/Nagios/SingleCheck.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::ActiveMQ" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/ActiveMQ.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::BaseHandler" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/BaseHandler.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Geronimo" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Geronimo.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Glassfish" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Glassfish.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Hadoop" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Hadoop.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::JBoss" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/JBoss.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Jetty" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Jetty.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Jonas" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Jonas.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Resin" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Resin.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::SpringDM" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/SpringDM.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Terracotta" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Terracotta.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Tomcat" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Tomcat.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Unknown" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Unknown.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Weblogic" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Weblogic.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Product::Websphere" : {
+          "file" : "lib/JMX/Jmx4Perl/Product/Websphere.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Request" : {
+          "file" : "lib/JMX/Jmx4Perl/Request.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Response" : {
+          "file" : "lib/JMX/Jmx4Perl/Response.pm",
+-         "version" : 0
++         "version" : "0"
+       },
+       "JMX::Jmx4Perl::Util" : {
+          "file" : "lib/JMX/Jmx4Perl/Util.pm",
+-         "version" : 0
++         "version" : "0"
+       }
+    },
+-   "release_status" : "stable",
++   "release_status" : "testing",
+    "resources" : {
+       "license" : [
+          "http://opensource.org/licenses/gpl-license.php"
+       ]
+    },
+-   "version" : "1.07"
++   "version" : "1.07_1"
+ }
+--- /dev/null
++++ libjmx4perl-perl-1.07/it/test_log.txt
+@@ -0,0 +1,319 @@
++Jolokia 1.1.1 + Jmx4Perl 1.07_1 (2013-03-26)
++    JEE-Server
++      Tomcat 7.0.33 & 6.0.35 & 5.5.35
++      Jetty 9.0.0.RC1 & 8.1.9 & 7.6.9 & 6.1.26 & 5.1.15
++      Felix 4.2.0 (bundle + pure) & 3.2.2 (bundle + pure) & 
++            3.0.8 (pure)
++      Jboss 7.1.1 & 6.1.0 & 5.1.0 & 4.2.3
++      Weblogic 10.3.6.0
++
++    OSGi-Container
++      Equinox 3.7.0 (bundle) & 3.6.1 (pure)
++      Karaf 2.3.0
++     
++
++Jolokia 1.1.0 + Jmx4Perl 1.07_1 (2013-02-22)
++    JEE-Server
++      Tomcat 7.0.33 & 6.0.35 & 5.5.35
++      Jetty 9.0.0.RC1 & 8.1.9 & 7.6.9 & 6.1.26 & 5.1.15
++      Geronimo 3.0.0
++      Glassfish 3.1.2 (web,osgi,jvm-agent) & 3.0.1 & 2.1.1
++      Jboss 7.1.1 & 6.1.0 (w/o custom enums) & 5.1.0 (w/o custom enums)
++      Jonas 5.2.1
++      Weblogic 10.3.6.0 (war, jvm-agent) & 10.0.2.0 (war & jvm) & 
++               9.2 MP3 (war)
++      Websphere 7.0.0.11
++ 
++    OSGi-Container
++      Felix 4.2.0 (bundle + pure) & 3.2.2 (bundle + pure) & 
++            3.0.8 (pure) & 2.0.5 (bundle)
++      Equinox 3.8.1 (bundle) & 3.7.0 (bundle)
++      Karaf 2.3.0 (pure + bundle + jvm)     
++      Knopflerfish 3.2.5 (Framework 5.3.3) (bundle + pure)
++      Virgo 3.6.0 (JVM agent)
++
++
++Jolokia 1.0.6 + Jmx4Perl 1.06 (2012-11-24)
++    JEE-Server
++      Tomcat 7.0.33 & 6.0.35 & 5.5.35
++      Jetty 8.1.4 & 7.5.1 & 6.1.26 & 5.1.15
++      Geronimo 3.0.0
++      Glassfish 3.1.2 (web, osgi, jvm)  & 3.0.1 & 2.1.1
++      Jboss 7.1.1 & 6.1.0 & 5.1.0
++     
++    OSGi-Agents
++      Felix 4.0.3 (bundle + pure)
++      Equinox 3.7.1 (bundle + pure)
++      Knopflerfish 3.4.0 (bundle + pure)
++
++    JVM-JDK6 Agent
++      Equinox 3.8.2M2
++
++
++Jolokia 1.0.5 + Jmx4Perl 1.05 (2012-07-20)
++    JEE-Server
++      Tomcat 7.0.27 & 6.0.35 & 5.5.35
++      Jetty 8.1.4 & 8.0.1 & 7.5.1 & 6.1.26 & 5.1.15
++      Jboss 7.1.1
++      Glassfish 3.1.2 & 3.0.1 & 2.1.1
++
++    OSGi-Agents
++      Felix 4.0.0 (bundle + pure), 3.2.2 (bundle + pure), 
++
++    JVM-JDK6 Agent
++       Equinox 3.8.2M2
++      
++    Misc
++      HornetQ 2.2.14.Final
++
++Jolokia 1.0.4 + Jmx4Perl 1.05 (2012-06-07)
++    JEE-Server 
++      Glassfish 3.1.2 & 3.0.1 & 2.1.1
++      Tomcat 7.0.27 & 6.0.35 & 5.5.35
++      Jetty 8.1.4 & 8.0.1 & 7.5.1 & 6.1.26 & 5.1.15
++      Geronimo 2.1.6
++      Jboss 7.1.1
++    OSGi-Agents
++      Felix 4.0.0 (bundle + pure)
++      Equinox 3.7.1 (bundle)
++
++    JVM-JDK6 Agent
++      Felix 3.0.8
++         
++Jolokia 1.0.3 + Jmx4Perl 1.05 (2012-04-10)
++    JEE-Server 
++      Tomcat 7.0.21 & 6.0.33
++      JBoss 6.1.0
++      Glassfish 3.1.1
++      Jetty 8.0.1      
++
++    OSGi-Agents
++       Felix 3.0.8 (bundle + pure), 4.0.0 (bundle + pure)
++       
++    JVM-JDK6 Agent
++       Felix 3.0.8
++
++Jolokia 1.0.2 + Jmx4Perl 1.04 (2012-01-06)
++    JEE-Server
++      Tomcat 7.0.21
++      Jetty 8.0.1
++      JBoss 7.0.2
++
++    OSGi-Agents
++      Felix 4.0.0 (bundle,pure)
++      Equinox 3.6.1 (bundle,pure)
++
++    JVM-JDK6 Agent    
++      Camel 2.8.1
++
++Jolokia 1.0.0 + Jmx4Perl 1.00
++    JEE-Server
++      Websphere 8.0.0.1 & 7.0.0.11 & 6.1.0.33
++      WebLogic 10.3.5.0 (11g) & 10.0.2.0 & 9.2.3.0
++      Jonas 5.2.1
++      Geronimo 3.0-M1 & 2.2.1 & 2.1.6
++      Virgo 2.1.0
++      Glassfish 2.1.1 & 3.0.1 & 3.1.1
++      JBoss 7.0.2 & 6.1.0 & 5.1.0 & 4.2.3 
++      Tomcat 7.0.20 & 6.0.33 & 5.5.33
++      Jetty 8.0.1 & 7.5.1 & 6.1.26 & 5.1.15
++
++    OSGi-Agents:
++      Felix 4.0.0 (bundle, pure, Java 1.5, 1.6, 1.7) & 
++            3.2.2 (bundle, pure, jdk6-agent) & 
++            2.0.5 (bundle)
++      Equinox 3.6.1 (bundle,pure) & 
++              3.7.1 (bundle,pure) & 
++              3.8M1 (bundle)
++      Virgo 2.1.0 (bundle,pure) & 3.0.1 (bundle)
++      Knopflerfish 3.2.0 (bundle,pure)
++
++    Mule-Agent
++      Mule 3.1.1 & 3.2.0  
++
++   JVM-JDK6 Agent
++      Camel 2.8.1
++      ActiveMQ 5.5.0
++   =====
++   Sum: 38 + variants.
++ 
++Jolokia 0.95 + Jmx4perl 0.95
++    JEE-Server
++      Tomcat 5.5.33 & 6.0.33 & 7.0.20
++      JBoss 4.2.3 & 5.1.0 & 6.0.0 & 7.0.1
++      Geronimo 2.2.1 & 2.1.6
++      Glassfish 2.1.1 & 3.0.1
++      Virgo 2.1 (web)
++      Weblogic 9.2 & 10.0
++      Websphere 6.1.0.33 & 7.0.0.11
++
++    OSGi-Agents:
++      Felix 3.2.2 (bundle, pure) & 2.0.5 (bundle)
++      Equinox 3.6.1 (bundle,pure) & 3.7.0 (bundle)
++           
++Jolokia 0.90 + Jmx4perl 0.90
++    OSGi-Agents:
++      Felix 3.0.8 (bundle,pure) & 2.0.5 (bundle)
++      Equinox 3.6.1 (bundle,pure) & 3.7M5 (bundle)
++      Virgo 2.1 (kernel: bundle, pure -- web: war) & 3.0 M5 (war)
++      Knopflerfish 3.1.0 (pure)
++
++    JEE-Server
++      Tomcat 5.5.31 & 6.0.30 & 7.0.6 
++      Jetty 5.1.15 & 6.1.26 & 7.2.2 & 8.0.0.M2
++      Geronimo 2.1.6 & 3.0 M1
++      JBoss 4.2.3 & 5.1.0 & 6.0.0
++      Glassfish 2.1.1 & 3.0.1
++      Jonas 5.2.0-M3
++      Weblogic 9.2 & 10.0
++      Websphere 6.1.0.33 & 7.0.0.11
++
++    JVM-JDK6
++      Felix 3.0.8 started with JVM agent
++
++    Mule-Agent
++      Mule 3.1.1 (no IT)
++
++2011-02-18 - Jolokia 0.83
++    OSGi-Agents:
++      Felix 3.0.8 (bundle,pure) & 2.0.5 (bundle)
++      Equinox 3.6.1 (bundle,pure) & 3.7M5 (bundle)
++      Virgo 2.1 (kernel: bundle, pure -- web: war)
++
++    JEE-Server
++      Tomcat 5.5.31 & 6.0.30 & 7.0.6 
++      Jetty 5.1.15 & 6.1.26 & 7.2.2 & 8.0.0.M2
++      Geronimo 2.1.6 & 3.0 M1
++      JBoss 5.1.0 & 6.0.0
++      Glassfish 2.1.1 & 3.0.1
++      Jonas 5.2.0-M3
++
++2011-01-16 - Jmx4Perl 0.74 & Jolokia 0.82
++    JEE-Server
++      Tomcat 5.5.31 & 6.0.30 & 7.0.6 
++      Glassfish 3.0.1
++      Jetty 6.1.26 & 7.2.2
++      Jboss 5.1.0 & 6.0.0
++
++    OSGi-Agents:
++      Felix 3.0.7
++
++    JVM-Agent:
++      ActiveMQ 5.3.1
++
++2010-12-13 - Jolokia 0.81
++    JEE-Server
++      Websphere 6.1.0.33 & 7.0.0.11
++      Tomcat 5.5.29 & 6.0.26 & 7.0.0 Beta
++      Jetty 5.1.15 & 6.1.22 & 7.0.1 & 8.0.0.M0
++      Jonas 4.10.7 (Jetty 5 & Tomcat 5) & 5.1.1
++      JBoss 4.2.3 & 5.1.0 & 6.0.0.M3
++      Glassfish 2.1.1 & 3.0.1
++      Spring dm server 2.0.0.RELEASE
++      Geronimo 2.2 
++      Weblogic 9.2 & 10.0
++   
++    OSGi-Agents:
++      Felix 2.0.4
++      Equinox 3.5.2 & 3.6.0
++
++    Mule:
++      Mule 2.2.1 & 3.0.0
++
++    JVM-Agent:
++      ActiveMQ 5.3.1
++      Terracotta 3.2.1
++      Hadoop 0.20.2
++ 
++2010-09-24 - 0.72
++    JEE-Server
++      Tomcat 5.5.29 & 6.0.26 & 7.0.0 Beta
++      Jetty 5.1.15 & 6.1.22 & 7.0.1 & 8.0.0.M0
++      Jonas 4.10.7 (Jetty 5 & Tomcat 5) & 5.1.1
++      JBoss 4.2.3 & 5.1.0 & 6.0.0.M3
++      Glassfish 2.1.1 & 3.0.1
++      Spring dm server 2.0.0.RELEASE
++      Weblogic 9.2 & 10.0 
++      Geronimo 2.2 
++      Websphere 7.0
++
++    Osgi-Agent:
++      Felix 2.0.4 & 3.0.1
++      Equinox 3.5.2 & 3.6.0
++
++    Mule:
++      Mule 2.2.1 & 3.0.0
++
++    JVM-Agent:
++      ActiveMQ 5.3.1
++      Terracotta 3.2.1
++      Hadoop 0.20.2
++
++2010-07-09 - 0.70
++    JEE-Server
++      JBoss 4.2.3 & 5.1.0 & 6.0.0.M3
++      Tomcat 5.5.29 & 6.0.26 & 7.0.0 Beta
++      Jetty 5.1.15 & 6.1.22 & 7.0.1 & 8.0.0.M0
++      Geronimo 2.2 (Jetty 7 & Tomcat 6)
++      Jonas 4.10.7 (Jetty 5 & Tomcat 5) & 5.1.1
++      Glassfish 2.1.1 & 3.0
++      Resin 3.1.9
++      Spring dm server 2.0.0.RELEASE
++    Osgi-Agent:
++      Felix 2.0.4 & 3.0.1
++      Equinox 3.5.2 & 3.6.0
++    JVM-Agent:
++      ActiveMQ 5.3.1
++      Terracotta 3.2.1
++      Hadoop 0.20.2
++    Mule:
++      Mule 2.2.1
++    JEE-Server
++      Weblogic 9.2 & 10.0 
++      Websphere 7.0 & 6.1 (without java.lang:)
++
++
++2010-03-28 - 0.65
++    JVM-Agent:
++      ActiveMQ 5.3.1
++      Terracotta 3.2.1
++      Hadoop 0.20.2
++    Osgi-Agent:
++      Felix 2.0.4
++      Equinox 3.5.2
++    JEE-Server
++      JBoss 4.2.3 & 5.1.0 & 6.0.0.M2
++      Tomcat 5.5.28 & 6.0.26
++      Jetty 5.1.15 & 6.1.22 & 7.0.1 & 8.0.0.M0
++      Geronimo 2.2 (Jetty 7 & Tomcat 6)
++      Jonas 4.10.7 (Jetty 5 & Tomcat 5) & 5.1.1
++      Spring dm server 2.0.0.RELEASE
++      Glassfish 2.1.1 & 3.0
++      Resin 3.1.9
++      Weblogic 9.2 & 10.0 
++      Websphere 7.0 
++      
++2010-03-01 - 0.60
++    JBoss 5.1.0 GA & 4.2.3 GA
++    Glassfish 2.1.1
++    Weblogic 9.2 & 10.0 
++    Websphere 7.0
++    Resin 3.1.9
++    Tomcat 6.0.20 & 5.5.28
++    Jetty 6.1.21 & 7.0.0 & 5.1.15
++    Jonas 5.1.1 & 4.10.6
++    Geronimo 2.2
++
++2009-11-12 - 0.40_2
++    Glassfish 2.1.1 & 3 Preview
++    Jboss 4.2.3 GA & 5.1 GA
++    Geronimo 2.1.4 (w. Jetty 6)
++
++2009-11-13 - 0.40_2
++    Weblogic 9.2 & 10.0
++    Websphere 6.1 (no MXBeans, though) + 7.0 (completely)
++    Jonas 4.10.3 & 5.1.0
++    Tomcat 5.5.28 & 6.0.20
++    Jetty 5.1.15 & 6.1.21 & 7.0.0
++    
++   

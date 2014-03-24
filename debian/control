@@ -1,0 +1,42 @@
+Source: jmx4perl
+Section: perl
+Priority: optional
+Maintainer: Joonas Javanainen <joonas.javanainen@gmail.com>
+Build-Depends: debhelper (>= 9.20120312),
+ perl,
+ libarchive-zip-perl, libconfig-general-perl (>= 2.34), libcrypt-blowfish-pp-perl,
+ libdigest-sha1-perl, libfile-searchpath-perl, libjson-perl (>= 2.12),
+ libmodule-find-perl, libnagios-plugin-perl (>= 0.27), libsys-sigaction-perl,
+ libterm-clui-perl, libterm-progressbar-perl, libterm-shellui-perl,
+ libterm-size-perl (>= 0.207), liburi-perl (>= 1.35), libwww-perl,
+ libxml-libxml-perl, libxml-twig-perl
+Standards-Version: 3.9.4
+Homepage: https://metacpan.org/release/jmx4perl
+
+Package: libjmx4perl-perl
+Architecture: all
+Depends: ${misc:Depends}, ${perl:Depends},
+ libarchive-zip-perl, libconfig-general-perl (>= 2.34), libcrypt-blowfish-pp-perl,
+ libdigest-sha1-perl, libfile-searchpath-perl, libjson-perl (>= 2.12),
+ libmodule-find-perl, libnagios-plugin-perl (>= 0.27), libsys-sigaction-perl,
+ libterm-clui-perl, libterm-progressbar-perl, libterm-shellui-perl,
+ libterm-size-perl (>= 0.207), liburi-perl (>= 1.35), libwww-perl,
+ libxml-libxml-perl, libxml-twig-perl
+Description: Easy JMX access to Java EE applications
+ Jmx4Perl provides an alternate way for accessing Java JEE Server
+ management interfaces which are based on JMX (Java Management
+ Extensions). It is an agent based approach, where a small Java
+ Webapplication deployed on the application server provides an
+ HTTP/JSON based access to JMX MBeans registered within the
+ application server.
+
+Package: jmx4perl
+Architecture: all
+Depends: ${misc:Depends}, ${perl:Depends}, libjmx4perl-perl (= ${binary:Version})
+Description: Easy JMX access to Java EE applications (command-line tools)
+ Jmx4Perl provides an alternate way for accessing Java JEE Server
+ management interfaces which are based on JMX (Java Management
+ Extensions). It is an agent based approach, where a small Java
+ Webapplication deployed on the application server provides an
+ HTTP/JSON based access to JMX MBeans registered within the
+ application server.
